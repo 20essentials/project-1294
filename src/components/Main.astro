@@ -1,0 +1,53 @@
+<canvas class='am-canvas'></canvas>
+
+<style is:global>
+  .am-canvas {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+  }
+</style>
+
+<script>
+  import { $ } from '@/utils/functions';
+  const canvas = $<HTMLCanvasElement>('.am-canvas');
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  let widthCanvas = (canvas.width = window.innerWidth);
+  let heightCanvas = (canvas.height = window.innerHeight);
+  let quantityParticles = 500;
+  let particles = [];
+
+  function reset() {
+    widthCanvas = canvas.width = window.innerWidth;
+    heightCanvas = canvas.height = window.innerHeight;
+    particles = [];
+    particles = Array(quantityParticles)
+      .fill(undefined)
+      .map(() => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: Math.random() * 3 - 1,
+        vy: Math.random() * 3 - 1,
+        hue: Math.random() * 360
+      }));
+  }
+
+  function drawCanvas() {
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      ctx.fillStyle = `hsl(${p.hue}, 100%, 50%)`;
+      ctx.fillRect(p.x, p.y, 4, 4);
+    });
+    requestAnimationFrame(drawCanvas);
+  }
+
+  reset();
+  drawCanvas();
+  window.addEventListener('resize', reset);
+</script>
