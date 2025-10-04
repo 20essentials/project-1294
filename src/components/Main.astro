@@ -10,13 +10,15 @@
 </style>
 
 <script>
-  import { $ } from '@/utils/functions';
+  const $ = <T extends Element = HTMLElement>(el: string): T =>
+    document.querySelector<T>(el) as T;
   const canvas = $<HTMLCanvasElement>('.am-canvas');
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   let widthCanvas = (canvas.width = window.innerWidth);
   let heightCanvas = (canvas.height = window.innerHeight);
   let quantityParticles = 500;
-  let particles = [];
+  let particles: { x: number; y: number; vx: number; vy: number; hue: number }[] =
+    [];
 
   function reset() {
     widthCanvas = canvas.width = window.innerWidth;
